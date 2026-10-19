@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+$baseUrl = (string) env('SSO_AUTH_BASE_URL', '');
+
 return [
 
     /*
@@ -9,13 +11,15 @@ return [
     | Адрес хаба авторизации
     |--------------------------------------------------------------------------
     |
-    | Публичный адрес ЕЦА NBCom. Меняется только при переезде хаба.
+    | Обязательный параметр: адрес вашего SSO-хаба. В пакете нет адреса
+    | по умолчанию, чтобы не хранить инфраструктурные адреса в публичном
+    | репозитории. Задаётся через SSO_AUTH_BASE_URL.
     | ВАЖНО: JS-кнопка всегда загружается с хаба (см. button.js_url), а не из
     | этого пакета. Поэтому js_url должен указывать на тот же хаб.
     |
     */
 
-    'base_url' => env('SSO_AUTH_BASE_URL', 'https://authorization.nbcom.ru'),
+    'base_url' => $baseUrl,
 
     /*
     |--------------------------------------------------------------------------
@@ -105,8 +109,7 @@ return [
     'button' => [
         'js_url' => env(
             'SSO_AUTH_JS_URL',
-            rtrim(env('SSO_AUTH_BASE_URL', 'https://authorization.nbcom.ru'), '/')
-                . '/ssonbcom-auth-button.js',
+            $baseUrl !== '' ? rtrim($baseUrl, '/') . '/ssonbcom-auth-button.js' : '',
         ),
         'cache_bust' => (bool) env('SSO_AUTH_JS_CACHE_BUST', true),
         'include_script' => (bool) env('SSO_AUTH_BUTTON_INCLUDE_SCRIPT', true),

@@ -1,6 +1,6 @@
 # nbcom/laravel-sso-auth
 
-SSO-авторизация через ЕЦА NBCom (`authorization.nbcom.ru`) для Laravel 12+.
+SSO-авторизация через ЕЦА NBCom для Laravel 12+.
 
 Пакет даёт:
 
@@ -61,7 +61,7 @@ php artisan vendor:publish --tag=sso-auth-views
 ```dotenv
 SSO_AUTH_CLIENT_ID=your-client-id
 SSO_AUTH_CLIENT_SECRET=your-client-secret
-SSO_AUTH_BASE_URL=https://authorization.nbcom.ru
+SSO_AUTH_BASE_URL=https://sso.example.com
 
 # Куда вернуть пользователя после успешного входа (можно относительный путь)
 SSO_AUTH_REDIRECT_AFTER_CALLBACK=/dashboard
@@ -70,6 +70,7 @@ SSO_AUTH_REDIRECT_AFTER_CALLBACK=/dashboard
 SSO_AUTH_ERROR_REDIRECT=/login
 ```
 
+`SSO_AUTH_BASE_URL` обязателен: в пакете нет адреса хаба по умолчанию.
 Секрет хранится только на сервере и никогда не попадает в браузер.
 
 Полный список параметров — в `config/sso-auth.php`. Чаще всего нужны:
@@ -97,8 +98,8 @@ SSO_AUTH_ERROR_REDIRECT=/login
 раз подключит скрипт с хаба:
 
 ```html
-<div class="ssonbcom-auth-button" data-url="https://authorization.nbcom.ru/start?..."></div>
-<script src="https://authorization.nbcom.ru/ssonbcom-auth-button.js?v=1730000000" defer></script>
+<div class="ssonbcom-auth-button" data-url="https://sso.example.com/start?..."></div>
+<script src="https://sso.example.com/ssonbcom-auth-button.js?v=1730000000" defer></script>
 ```
 
 `?v=<unix time>` добавляется всегда, чтобы обойти кеш браузера и nginx. Сам
@@ -301,8 +302,9 @@ SSO_AUTH_DELEGATE_STATELESS=false
 - **JS всегда грузится с хаба** и привязан к `base_url`. Если вы поднимаете
   отдельный стенд хаба, задайте `SSO_AUTH_JS_URL` на его виджет.
 - **Персональная кнопка «Войти как Иванов И.»** работает только для сайтов на
-  `*.nbcom.ru`: браузер должен отправлять cookie хаба в кросс-доменном
-  credentialed-запросе. Для внешних доменов виджет покажет обычную кнопку.
+  том же домене верхнего уровня, что и хаб (same-site): браузер должен
+  отправлять cookie хаба в кросс-доменном credentialed-запросе. Для внешних
+  доменов виджет покажет обычную кнопку.
 
 ## Лицензия
 

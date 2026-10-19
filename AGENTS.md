@@ -1,8 +1,8 @@
 # AGENTS.md — карта пакета `nbcom/laravel-sso-auth`
 
-Пакет — **клиентская сторона** SSO-хаба ЕЦА NBCom (`https://authorization.nbcom.ru`).
-Он ставится в Laravel-приложение (сайт-клиент), а не в сам хаб. Хаб живёт в
-отдельном репозитории `authorization.nbcom.ru`.
+Пакет — **клиентская сторона** SSO-хаба ЕЦА NBCom. Он ставится в
+Laravel-приложение (сайт-клиент), а не в сам хаб. Адрес хаба задаётся
+приложением через `SSO_AUTH_BASE_URL`; в пакете он не хранится.
 
 Главный принцип: пакет **проверяет ответ хаба и отдаёт DTO**, но не логинит
 пользователя, не создаёт его и не пишет в БД. Решение остаётся приложению.
@@ -12,10 +12,10 @@
 ```
 Браузер
   │  <div class="ssonbcom-auth-button" data-url=".../start?...">
-  │  <script src="https://authorization.nbcom.ru/ssonbcom-auth-button.js?v=<time()>">
+  │  <script src="{SSO_AUTH_BASE_URL}/ssonbcom-auth-button.js?v=<time()>">
   ▼
 JS-виджет с хаба (iframe-модалка)
-  │  GET https://authorization.nbcom.ru/start?client_id&ticket&state&return_url&target_url[&frame=1]
+  │  GET {SSO_AUTH_BASE_URL}/start?client_id&ticket&state&return_url&target_url[&frame=1]
   ▼
 Хаб: логин в Bitrix24 → подписанный redirect
   │  GET {return_url}?state&bitrix_user_id&ts&user&sig
@@ -99,7 +99,7 @@ src/
 
 | Env | По умолчанию | Смысл |
 |---|---|---|
-| `SSO_AUTH_BASE_URL` | `https://authorization.nbcom.ru` | Хаб |
+| `SSO_AUTH_BASE_URL` | — (обязателен) | Адрес хаба |
 | `SSO_AUTH_CLIENT_ID` | — | client_id клиента |
 | `SSO_AUTH_CLIENT_SECRET` | — | секрет, только сервер |
 | `SSO_AUTH_TTL` | `180` | окно валидности ответа |
@@ -132,8 +132,8 @@ src/
   Не кешируйте HTML с кнопкой.
 - **`frame=1`.** Виджет сам добавляет его к `/start`. Серверная часть пакета
   этот параметр не формирует и не должна.
-- **Персональная кнопка** («Войти как Иванов И.») работает только на
-  `*.nbcom.ru`: нужны cookie хаба в кросс-доменном `fetch` с `credentials`.
+- **Персональная кнопка** («Войти как Иванов И.») работает только на сайтах,
+  same-site с хабом: нужны cookie хаба в кросс-доменном `fetch` с `credentials`.
   Для внешних доменов API хаба возвращает `account: null`.
 - **Callback может прийти без state** (сессия истекла, другая вкладка) —
   это `InvalidCallbackException`, пользователь уходит на `error_redirect`
@@ -178,5 +178,5 @@ php artisan view:cache && php artisan view:clear
 - приватных доменов, токенов, URL стендов;
 - логов с ПДн.
 
-В примерах — только плейсхолдеры. Публичный адрес хаба
-`https://authorization.nbcom.ru` секретом не является.
+В примерах — только плейсхолдеры. Адрес хаба задаётся через
+`SSO_AUTH_BASE_URL` и в репозиторий не коммитится.
