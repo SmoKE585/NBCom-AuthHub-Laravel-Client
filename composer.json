@@ -1,0 +1,44 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "nbcom/laravel-sso-auth",
+    "description": "SSO-авторизация через ЕЦА NBCom (authorization.nbcom.ru) для Laravel-приложений: редирект-флоу, JS-кнопка и делегированный вход.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/SmoKE585/NBCom-AuthHub-Laravel-Client",
+    "support": {
+        "issues": "https://github.com/SmoKE585/NBCom-AuthHub-Laravel-Client/issues",
+        "source": "https://github.com/SmoKE585/NBCom-AuthHub-Laravel-Client"
+    },
+    "keywords": [
+        "laravel",
+        "sso",
+        "auth",
+        "nbcom"
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/cache": "^12.0",
+        "illuminate/contracts": "^12.0",
+        "illuminate/http": "^12.0",
+        "illuminate/routing": "^12.0",
+        "illuminate/session": "^12.0",
+        "illuminate/support": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nbcom\\SsoAuth\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nbcom\\SsoAuth\\SsoAuthServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
